@@ -16,7 +16,11 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+html {
+  scroll-behavior: smooth; scroll-padding-top: 90px;
+  /* stop iOS/Android auto-zoom & font inflation when content reflows on locale switch */
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+}
 
 body {
   margin: 0;
@@ -585,15 +589,16 @@ dialog.lb::backdrop { background: rgba(0, 0, 0, 0.85); }
 .table-wrap table { min-width: 420px; }
 
 @media (max-width: 600px) {
-  /* --- header: one row, thumb-sized taps --- */
+  /* --- header: brand centred on its own row, links + language below --- */
   .site-header .wrap {
-    min-height: 56px; gap: 6px; padding: 0 14px;
-    flex-wrap: nowrap;
+    flex-direction: column; align-items: center;
+    gap: 6px; padding: 10px 14px 12px;
+    min-height: auto;
   }
-  .brand { font-size: 14px; letter-spacing: .04em; gap: 6px; }
-  .nav { gap: 2px; flex: none; }
+  .brand { font-size: 16px; letter-spacing: .06em; gap: 8px; }
+  .nav { gap: 2px; justify-content: center; flex-wrap: wrap; width: 100%; }
   .nav a {
-    padding: 12px 9px; font-size: 13px;
+    padding: 10px 9px; font-size: 13px;
     min-height: 44px; display: flex; align-items: center;
   }
 
@@ -1105,8 +1110,20 @@ textarea.adm-field { min-height: 88px; resize: vertical; line-height: 1.6; }
   .onb-langs { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 560px) {
-  .onb { padding: 18px 16px; }
-  .onb-langs { grid-template-columns: repeat(2, 1fr); }
+  .onb-overlay { padding: 12px; }
+  .onb { padding: 16px 12px; }
+  .onb-langs {
+    grid-template-columns: repeat(3, 1fr); gap: 4px;
+    max-height: 52vh; padding-right: 2px;
+  }
+  .onb-lang {
+    flex-direction: column; text-align: center; gap: 3px;
+    padding: 8px 2px; min-width: 0;
+  }
+  .onb-lang-text { align-items: center; }
+  .onb-lang-en { display: none; }
+  .onb-flag { width: 20px; height: 13px; }
+  .onb-lang-name { font-size: 12px; }
   .profile-name { display: none; }
 }
 

@@ -1,6 +1,6 @@
 {
   "locale": "id",
-  "updatedAt": "2026-09-18T07:27:02.254Z",
+  "updatedAt": "2026-09-18T08:03:01.244Z",
   "strings": {
     "Season 3 Guide": "Panduan Musim 3",
     "Guide": "Panduan",
@@ -182,6 +182,7 @@
     "Guides": "Panduan",
     "Guides for Season 3": "Panduan untuk Musim 3",
     "Thank you for reading this and thank you for your time.\n<br>\n<span style=\"font-size: 80%;\">Written by <strong>Super Beta27</strong></span>\n<br>\n<span style=\"font-size: 80%;\">Edited by <strong>HaremEd</strong></span>": "Terima kasih telah membaca ini dan terima kasih atas waktu Anda.\n<br>\n<span style=\"font-size: 80%;\">Ditulis oleh <strong>Super Beta27</strong></span>\n<br>\n<span style=\"font-size: 80%;\">Disunting oleh <strong>HaremEd</strong></span>",
-    "sample": "contoh"
+    "sample": "contoh",
+    "Thank you for reading this and thank you for your time.\n<br>\n<span style=\"font-size: 80%;\">Written by <strong>Super Beta27</strong></span>\n<br>\n<span style=\"font-size: 80%;\">Edited by <strong>HaremEd</strong></span>\n<br>\n<span style=\"font-size: 80%;\">Improved by <strong>福riv</strong></span>": "Terima kasih telah membaca ini dan terima kasih atas waktu Anda.\n<br>\n<span style=\"font-size: 80%;\">Ditulis oleh <strong>Super Beta27</strong></span>\n<br>\n<span style=\"font-size: 80%;\">Disunting oleh <strong>HaremEd</strong></span>\n<br>\n<span style=\"font-size: 80%;\">Disempurnakan oleh <strong>福riv</strong></span>"
   }
 }

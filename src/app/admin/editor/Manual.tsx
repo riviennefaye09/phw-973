@@ -140,8 +140,25 @@ export function Manual({ onStart }: { onStart: () => void }) {
                 one row per line.
               </td>
             </tr>
+            <tr>
+              <td>
+                <strong>Embed</strong>
+              </td>
+              <td>
+                A video that plays right on the page. Paste the video&rsquo;s page link — YouTube, Vimeo,
+                Twitch, Dailymotion or a direct&nbsp;.mp4 file all work.
+              </td>
+            </tr>
           </tbody>
         </table>
+      </div>
+      <div className="tip">
+        <p>
+          <strong>Video pastes as a link, plays in place.</strong> Add an <strong>Embed</strong> block
+          and paste a YouTube or Vimeo page link — readers never leave the guide to watch. For other
+          sites, use their embed/share URL (the one for posting into a blog) if a plain page link
+          shows an empty box.
+        </p>
       </div>
       <div className="tip">
         <p>

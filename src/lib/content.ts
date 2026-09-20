@@ -92,6 +92,7 @@ export function previewText(
     if (b.type === "heading" && b.text) return clip(b.text, max);
     if (b.type === "list" && b.items.length) return clip(stripHtml(b.items[0]), max);
     if (b.type === "tip" && stripHtml(b.html)) return clip(stripHtml(b.html), max);
+    if (b.type === "embed" && stripHtml(b.caption || "")) return clip(stripHtml(b.caption || ""), max);
   }
   return "";
 }
@@ -130,6 +131,9 @@ export function sectionText(s: Pick<Section, "title" | "summary" | "blocks">): s
       case "table":
         parts.push(...(b.head || []).map(stripHtml));
         for (const row of b.rows || []) parts.push(...row.map(stripHtml));
+        break;
+      case "embed":
+        if (b.caption) parts.push(b.caption);
         break;
     }
   }
@@ -206,6 +210,7 @@ export const BLOCK_LABELS: Record<BlockType, string> = {
   choices: "Choice cards",
   figures: "Images",
   table: "Table",
+  embed: "Embed",
 };
 
 export const BLOCK_TYPES = Object.keys(BLOCK_LABELS) as BlockType[];
@@ -226,6 +231,8 @@ export function blankBlock(type: BlockType): Block {
       return { type, layout: "grid", items: [] };
     case "table":
       return { type, head: [], rows: [] };
+    case "embed":
+      return { type, url: "", caption: "" };
   }
 }
 

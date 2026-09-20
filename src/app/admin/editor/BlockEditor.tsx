@@ -14,6 +14,7 @@ import {
   deleteStoredImage,
 } from "./fields";
 import { assetUrl } from "@/lib/assets";
+import { embedSource } from "@/lib/embed";
 
 type EditorProps = {
   b: Block;
@@ -62,6 +63,9 @@ export function BlockEditor({ b, touch, password, onError }: EditorProps) {
 
     case "table":
       return <TableEditor b={b} touch={touch} />;
+
+    case "embed":
+      return <EmbedEditor b={b} touch={touch} />;
   }
 }
 
@@ -253,6 +257,56 @@ function FiguresEditor({
           touch();
         }}
       />
+    </div>
+  );
+}
+
+function EmbedEditor({
+  b,
+  touch,
+}: {
+  b: Block & { type: "embed" };
+  touch: () => void;
+}) {
+  const emb = embedSource(b.url);
+  const status = !b.url.trim()
+    ? "Paste a video page link. YouTube, Vimeo and Twitch links become a player that plays right on the page."
+    : emb?.kind === "youtube"
+      ? "YouTube — plays in this page."
+      : emb?.kind === "vimeo"
+        ? "Vimeo — plays in this page."
+        : emb?.kind === "dailymotion"
+          ? "Dailymotion — plays in this page."
+          : emb?.kind === "twitch"
+            ? "Twitch — plays in this page."
+            : emb?.kind === "file"
+              ? "Direct video file (mp4 / webm) — plays in this page."
+              : emb?.kind === "page"
+                ? "Web page — shown in a frame. Some sites refuse to embed a plain page; use their embed/share URL if it does not play."
+                : "That link does not look like a video or page URL. Paste the video's page link.";
+  return (
+    <div>
+      <Labelled text="Video link">
+        <TextInput
+          value={b.url}
+          placeholder="https://www.youtube.com/watch?v=…"
+          onChange={(v) => {
+            b.url = v;
+            touch();
+          }}
+        />
+      </Labelled>
+      <div className="adm-label">{status}</div>
+      <Labelled text="Caption">
+        <TextInput
+          value={b.caption}
+          placeholder="Shown under the player, optional"
+          onChange={(v) => {
+            b.caption = v;
+            touch();
+          }}
+        />
+      </Labelled>
     </div>
   );
 }

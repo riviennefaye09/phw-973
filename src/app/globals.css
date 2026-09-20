@@ -232,6 +232,18 @@ td .dot { margin-right: 6px; }
 .tip.warn { border-left-color: #ff3d7f; }
 .tip.warn strong { color: #ff5c92; }
 
+/* ---------- embedded video ---------- */
+
+.embed { margin: 22px 0 0; }
+.embed iframe,
+.embed video {
+  display: block; width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--bg-2);
+}
+.embed video { object-fit: contain; }
+.embed .embed-cap { color: var(--ash); font-size: 13px; margin-top: 8px; }
+
 /* ---------- in-page image viewer ---------- */
 
 .figs a { cursor: zoom-in; }

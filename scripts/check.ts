@@ -23,6 +23,7 @@ import {
 } from "../src/lib/content";
 import { validGuideDoc } from "../src/lib/validate";
 import { contentHash, mapTranslations } from "../src/lib/translate-walk";
+import { embedSource, type Embed } from "../src/lib/embed";
 import type { GuideDoc } from "../src/lib/types";
 
 /* ---- pickCurrent: which section is the reader in? ---- */
@@ -122,6 +123,35 @@ const partial = normalizeHome({ hero: { title: "New" }, join: { facts: [{ term: 
 assert.equal(partial.hero.title, "New", "an edited field wins");
 assert.equal(partial.hero.sub, "Alliance Family", "an untouched field keeps its default");
 assert.equal(partial.join.facts.length, 1, "a nested array can be replaced wholesale");
+
+/* ---- video embeds: page links become in-page players ---- */
+const embKind = (url: string): Embed["kind"] => embedSource(url)!.kind;
+assert.equal(embedSource(""), null, "an empty link is rejected");
+assert.equal(embedSource("not a url"), null, "garbage is rejected");
+assert.equal(embedSource("ftp://files.example.com/a.mp4"), null, "non-http schemes are rejected");
+
+assert.equal(embKind("https://www.youtube.com/watch?v=abc123XYZ"), "youtube", "a watch link embeds");
+assert.equal(
+  embedSource("https://www.youtube.com/watch?v=abc123XYZ")?.src,
+  "https://www.youtube-nocookie.com/embed/abc123XYZ",
+  "the watch id becomes the embed id"
+);
+assert.equal(embKind("https://youtu.be/AbC-xYz"), "youtube", "a youtu.be short link embeds");
+assert.equal(embKind("https://m.youtube.com/watch?v=id1"), "youtube", "mobile hosts embed too");
+assert.equal(embKind("https://youtube.com/shorts/zz"), "youtube", "shorts embed");
+assert.equal(embKind("https://www.youtube.com/embed/zz"), "youtube", "an embed link is recognized");
+assert.equal(embKind("https://vimeo.com/123456789"), "vimeo", "vimeo embeds");
+assert.equal(embKind("https://www.vimeo.com/123456789/slug"), "vimeo", "vimeo with a slug embeds");
+assert.equal(embKind("https://dailymotion.com/video/xyzq"), "dailymotion", "dailymotion embeds");
+assert.equal(embKind("https://dai.ly/xyzq"), "dailymotion", "dai.ly short link embeds");
+assert.equal(embKind("https://twitch.tv/videos/123456"), "twitch", "a twitch broadcast embeds");
+assert.equal(embKind("https://www.twitch.tv/somechannel"), "twitch", "a twitch channel embeds");
+const tw = embedSource("https://www.twitch.tv/videos/123", "phw.example.com");
+assert.ok(tw && tw.kind === "twitch" && tw.src.includes("parent=phw.example.com"), "twitch gets its parent domain");
+assert.equal(embKind("https://cdn.example.com/clip.mp4"), "file", "an mp4 link becomes a video element");
+assert.equal(embKind("https://cdn.example.com/clip.MP4"), "file", "file extension check ignores case");
+assert.equal(embKind("https://example.com/anything-else"), "page", "an unknown https link is framed as a page");
+assert.equal(embKind("http://example.com/x"), "page", "plain http is allowed and framed");
 
 /* ---- guide cards: blurb and cover fall back to the content ---- */
 assert.equal(previewText({ blocks: [{ type: "text", html: "Hello <strong>all</strong>" }] }), "Hello all", "the blurb strips markup");

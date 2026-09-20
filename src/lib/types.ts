@@ -15,7 +15,8 @@ export type Block =
       layout?: "grid" | "one" | "full" | "narrow";
       items: { src: string; alt?: string; caption?: string }[];
     }
-  | { type: "table"; head?: string[]; rows?: string[][] };
+  | { type: "table"; head?: string[]; rows?: string[][] }
+  | { type: "embed"; url: string; caption?: string };
 
 // A section is a single guide. In the browser it appears as a card under its
 // category (the group), and it has its own page with a comment thread.

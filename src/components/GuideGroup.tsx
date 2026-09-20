@@ -1,5 +1,6 @@
 import type { Block, Group, Section } from "@/lib/types";
 import { assetUrl } from "@/lib/assets";
+import { embedSource } from "@/lib/embed";
 import { useLightbox } from "./Lightbox";
 
 function FigureLink({
@@ -36,6 +37,33 @@ function Figure({ f }: { f: { src: string; alt?: string; caption?: string } }) {
       </FigureLink>
       {f.caption ? <figcaption dangerouslySetInnerHTML={{ __html: f.caption }} /> : null}
     </figure>
+  );
+}
+
+function EmbedBlock({ b }: { b: Block & { type: "embed" } }) {
+  if (!b.url || !b.url.trim()) return null;
+  const parent = typeof window !== "undefined" ? window.location.hostname : "";
+  const emb = embedSource(b.url, parent);
+  return (
+    <div className="embed">
+      {emb ? (
+        emb.kind === "file" ? (
+          <video controls preload="metadata" playsInline src={emb.src} />
+        ) : (
+          <iframe
+            src={emb.src}
+            title={b.caption || "Embedded video"}
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            referrerPolicy="strict-origin-when-cross-origin"
+          />
+        )
+      ) : (
+        <p className="wip">This embed needs a valid link.</p>
+      )}
+      {b.caption ? <p className="embed-cap">{b.caption}</p> : null}
+    </div>
   );
 }
 
@@ -115,6 +143,9 @@ export function GuideBlock({ b }: { b: Block }) {
           </table>
         </div>
       );
+
+    case "embed":
+      return <EmbedBlock b={b} />;
 
     default:
       // ponytail: content written by a newer version of the editor. Say so in

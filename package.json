@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "eslint",
     "check": "tsx scripts/check.ts",
-    "seed": "tsx scripts/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "seed:translations": "tsx scripts/seed-translations.ts",
+    "backfill:translations": "tsx scripts/backfill-translations.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.0",

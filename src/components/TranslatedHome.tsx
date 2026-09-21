@@ -8,11 +8,13 @@ import { useTranslatedDoc } from "./useTranslatedDoc";
 export function TranslatedHome({
   source,
   translated,
+  translatedLocale,
 }: {
   source: HomeDoc;
   translated: HomeDoc | null;
+  translatedLocale: string | null;
 }) {
-  const { doc, loading } = useTranslatedDoc<HomeDoc>("home", source, translated);
+  const { doc, loading } = useTranslatedDoc<HomeDoc>("home", source, translated, translatedLocale);
   return (
     <>
       <HomeView home={doc} />

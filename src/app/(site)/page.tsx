@@ -17,6 +17,6 @@ export default async function HomePage() {
   const row = await loadRow<Record<string, unknown>>("home");
   const home = normalizeHome(row?.doc ?? null);
   const locale = await getLocale();
-  const { source, translated } = await localized("home", home, locale);
-  return <TranslatedHome source={source} translated={translated} />;
+  const { source, translated, locale: translatedLocale } = await localized("home", home, locale);
+  return <TranslatedHome source={source} translated={translated} translatedLocale={translatedLocale} />;
 }

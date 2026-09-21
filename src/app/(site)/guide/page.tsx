@@ -22,7 +22,14 @@ export default async function GuidePage() {
   const row = await loadRow<Record<string, unknown>>("guide");
   const doc = normalize(row?.doc ?? null);
   const locale = await getLocale();
-  const { source, translated } = await localized("guide", doc, locale);
-  return <TranslatedGuideViewer source={source} translated={translated} target="guide" />;
+  const { source, translated, locale: translatedLocale } = await localized("guide", doc, locale);
+  return (
+    <TranslatedGuideViewer
+      source={source}
+      translated={translated}
+      translatedLocale={translatedLocale}
+      target="guide"
+    />
+  );
 }
 

@@ -17,6 +17,13 @@ export default async function RulesPage() {
   const row = await loadRow<Record<string, unknown>>("rules");
   const doc = normalizeRules(row?.doc ?? null);
   const locale = await getLocale();
-  const { source, translated } = await localized("rules", doc, locale);
-  return <TranslatedGuideViewer source={source} translated={translated} target="rules" />;
+  const { source, translated, locale: translatedLocale } = await localized("rules", doc, locale);
+  return (
+    <TranslatedGuideViewer
+      source={source}
+      translated={translated}
+      translatedLocale={translatedLocale}
+      target="rules"
+    />
+  );
 }

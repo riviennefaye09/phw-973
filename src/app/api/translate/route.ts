@@ -4,7 +4,7 @@ import { ensureTranslation, loadSource, type Scope } from "@/lib/translation";
 
 export const dynamic = "force-dynamic";
 
-const SCOPES: Scope[] = ["guide", "home", "rules"];
+const SCOPES: Scope[] = ["guide", "rules"];
 
 // Generate (or fetch from cache) the translation of one content document for
 // the visitor's current language. Called by the client after the page has

@@ -41,7 +41,7 @@ async function main() {
     process.exit(1);
   }
 
-  const scopes = ["guide", "home", "rules"] as const;
+  const scopes = ["guide", "rules"] as const;
   const locales = mapLocales();
   let wrote = 0;
   let skipped = 0;

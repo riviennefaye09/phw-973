@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocale } from "./i18n/LocaleProvider";
 
-type Scope = "guide" | "home" | "rules";
+type Scope = "guide" | "rules";
 
 // Translated documents are cached in three layers so a language switch is
 // instant once a translation has been seen before:

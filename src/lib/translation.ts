@@ -1,4 +1,4 @@
-import { normalize, normalizeHome, normalizeRules } from "./content";
+import { normalize, normalizeRules } from "./content";
 import { loadRow, serverClient } from "./supabase";
 import { LOCALES, type LocaleCode } from "./i18n/locales";
 import {
@@ -19,7 +19,7 @@ import { loadLocaleMap, mergeIntoLocaleMap } from "./translation-store";
 // and then served from local JSON maps / Postgres to everyone, so cost scales with
 // (documents x languages actually used), not with traffic.
 
-export type Scope = "guide" | "home" | "rules";
+export type Scope = "guide" | "rules";
 
 const REF = "root";
 
@@ -339,7 +339,6 @@ export async function localized<T>(
 // Load and normalise a content document for the translation route.
 export async function loadSource(scope: Scope): Promise<unknown | null> {
   const row = await loadRow<Record<string, unknown>>(scope);
-  if (scope === "home") return normalizeHome(row?.doc ?? null);
   if (scope === "rules") return normalizeRules(row?.doc ?? null);
   return normalize(row?.doc ?? null);
 }

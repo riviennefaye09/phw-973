@@ -12,7 +12,6 @@ import {
   normalizeRules,
   groupOfSection,
   pickCurrent,
-  normalizeHome,
   previewText,
   coverOf,
   findGuide,
@@ -113,16 +112,6 @@ assert.ok(!validGuideDoc(null), "nothing is not a document");
 assert.ok(!validGuideDoc({ sections: [] }), "the old flat shape is no longer accepted");
 assert.ok(!validGuideDoc({ groups: [{ title: "no sections array" }] }), "a topic must carry a sections list");
 assert.ok(validGuideDoc({ groups: [] }), "an empty guide is still a valid document");
-
-/* ---- normalizeHome: partial DB rows must never render a blank page ---- */
-const home = normalizeHome(null);
-assert.ok(home.hero.title.length, "a missing row still gets a hero title");
-assert.equal(home.whatWeDo.cards.length, 3, "default cards survive an empty row");
-
-const partial = normalizeHome({ hero: { title: "New" }, join: { facts: [{ term: "A", detail: "B" }] } });
-assert.equal(partial.hero.title, "New", "an edited field wins");
-assert.equal(partial.hero.sub, "Alliance Family", "an untouched field keeps its default");
-assert.equal(partial.join.facts.length, 1, "a nested array can be replaced wholesale");
 
 /* ---- video embeds: page links become in-page players ---- */
 const embKind = (url: string): Embed["kind"] => embedSource(url)!.kind;

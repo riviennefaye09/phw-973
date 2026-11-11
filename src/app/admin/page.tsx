@@ -2,17 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import type { GuideDoc, HomeDoc } from "@/lib/types";
-import { normalize, normalizeHome, normalizeRules, slug } from "@/lib/content";
+import type { GuideDoc } from "@/lib/types";
+import { normalize, normalizeRules, slug } from "@/lib/content";
 import { GuideEditor } from "./editor/GuideEditor";
-import { HomeEditor } from "./editor/HomeEditor";
 import { Manual } from "./editor/Manual";
 import { Dialogs, useDialogs } from "./editor/dialog";
 import { Toasts, notify } from "./editor/toast";
 import { GuideGroup } from "@/components/GuideGroup";
 import { LightboxProvider } from "@/components/Lightbox";
 
-type Tab = "guide" | "rules" | "home";
+type Tab = "guide" | "rules";
 type View = "help" | "edit";
 
 async function post(path: string, body: unknown): Promise<{ ok: boolean; status: number; data: Record<string, unknown> }> {
@@ -36,8 +35,6 @@ export default function AdminPage() {
   const [guideVer, setGuideVer] = useState<number | null>(null);
   const [rules, setRules] = useState<GuideDoc | null>(null);
   const [rulesVer, setRulesVer] = useState<number | null>(null);
-  const [home, setHome] = useState<HomeDoc | null>(null);
-  const [homeVer, setHomeVer] = useState<number | null>(null);
 
   const [tab, setTab] = useState<Tab>("guide");
   const [view, setView] = useState<View>("help");
@@ -81,12 +78,9 @@ export default function AdminPage() {
     }
     setPw(passwordToUse);
     const g = (data.guide as { doc?: unknown; version?: number | null } | null) ?? null;
-    const h = (data.home as { doc?: unknown; version?: number | null } | null) ?? null;
     const r = (data.rules as { doc?: unknown; version?: number | null } | null) ?? null;
     setGuide(normalize(g?.doc ?? null));
     setGuideVer(g?.version ?? null);
-    setHome(normalizeHome(h?.doc ?? null));
-    setHomeVer(h?.version ?? null);
     setRules(normalizeRules(r?.doc ?? null));
     setRulesVer(r?.version ?? null);
     setGIdx(0);
@@ -116,19 +110,17 @@ export default function AdminPage() {
 
   async function save() {
     const target = tab;
-    const doc = target === "guide" ? guide : target === "rules" ? rules : home;
-    const version = target === "guide" ? guideVer : target === "rules" ? rulesVer : homeVer;
+    const doc = target === "guide" ? guide : rules;
+    const version = target === "guide" ? guideVer : rulesVer;
     if (!doc) return;
     setSaving(true);
 
-    if (target === "guide" || target === "rules") {
-      (doc as GuideDoc).groups.forEach((g) => {
-        if (!g.id) g.id = slug(g.title);
-        g.sections.forEach((s) => {
-          if (!s.id) s.id = slug(s.title);
-        });
+    (doc as GuideDoc).groups.forEach((g) => {
+      if (!g.id) g.id = slug(g.title);
+      g.sections.forEach((s) => {
+        if (!s.id) s.id = slug(s.title);
       });
-    }
+    });
     const { ok, status, data } = await post("/api/admin/save", {
       password: pw,
       target,
@@ -148,8 +140,7 @@ export default function AdminPage() {
       return;
     }
     if (target === "guide") setGuideVer(data.version as number);
-    else if (target === "rules") setRulesVer(data.version as number);
-    else setHomeVer(data.version as number);
+    else setRulesVer(data.version as number);
     setStateMsg("Published — the site is live");
     setDirty(false);
     notify("Published — the site is live");
@@ -223,9 +214,7 @@ export default function AdminPage() {
       ? "How to use this editor"
       : tab === "rules"
         ? "Alliance rules editor"
-        : tab === "home"
-          ? "Home page editor"
-          : "Guide editor";
+        : "Guide editor";
 
   const navOn = (t: Tab, help = false) =>
     tab === t && view === (help ? "help" : "edit");
@@ -281,14 +270,6 @@ export default function AdminPage() {
             >
               Rules
             </button>
-            <button
-              type="button"
-              className={"adm-nav-item" + (navOn("home") ? " on" : "")}
-              aria-current={navOn("home") ? "page" : undefined}
-              onClick={() => go("home")}
-            >
-              Home
-            </button>
           </div>
           <div className="adm-nav-group">
             <p className="adm-nav-label">Help</p>
@@ -340,18 +321,14 @@ export default function AdminPage() {
               setGroup={setGIdx}
               setCurrent={setSecIdx}
             />
-          ) : home ? (
-            <HomeEditor doc={home} touch={touch} password={pw} onError={(m) => notify(m, "error")} />
           ) : null}
 
-          {preview &&
-          (preview === "guide" ? guide : preview === "rules" ? rules : home) ? (
+          {preview && (preview === "guide" ? guide : rules) ? (
             <LightboxProvider>
               <AdminPreview
                 preview={preview}
                 guide={guide}
                 rules={rules}
-                home={home}
                 gIdx={gIdx}
                 onClose={() => setPreview(null)}
               />
@@ -389,22 +366,20 @@ function SignOutButton({ dirty, onSignOut }: { dirty: boolean; onSignOut: () => 
   );
 }
 
-// The admin preview: the current topic (Guide / Rules) or the whole home page,
-// exactly as readers will see them. Like the public lightbox it is a real
-// dialog opened with showModal(), so it sits on top of everything with a
-// backdrop instead of blending into the editor layout.
+// The admin preview: the current topic (Guide / Rules), exactly as readers
+// will see them. Like the public lightbox it is a real dialog opened with
+// showModal(), so it sits on top of everything with a backdrop instead of
+// blending into the editor layout.
 function AdminPreview({
   preview,
   guide,
   rules,
-  home,
   gIdx,
   onClose,
 }: {
   preview: Tab;
   guide: GuideDoc | null;
   rules: GuideDoc | null;
-  home: HomeDoc | null;
   gIdx: number;
   onClose: () => void;
 }) {
@@ -447,67 +422,9 @@ function AdminPreview({
             <div className="guide-body">
               <GuideGroup group={rules.groups[gIdx] || { id: "empty", title: "", sections: [] }} />
             </div>
-          ) : (
-            <HomePreview doc={home!} />
-          )}
+          ) : null}
         </div>
       </div>
     </dialog>
-  );
-}
-
-function HomePreview({ doc }: { doc: HomeDoc }) {
-  return (
-    <div className="lb-preview" style={{ color: "var(--text)" }}>
-      <div className="hero" style={{ padding: "48px 0 36px" }}>
-        <p className="sub">{doc.hero.sub}</p>
-        <h1>{doc.hero.title}</h1>
-        <p className="motto">
-          {doc.hero.motto}
-          <span>{doc.hero.tagline}</span>
-        </p>
-        <div className="btn-row">
-          <span className="btn btn-primary">{doc.hero.primaryLabel}</span>
-          <span className="btn btn-ghost">{doc.hero.ghostLabel}</span>
-        </div>
-      </div>
-      <section id="about">
-        <h2>{doc.about.title}</h2>
-        <p className="lead">{doc.about.lead}</p>
-      </section>
-      <section>
-        <p className="eyebrow">{doc.hub.eyebrow}</p>
-        <h2>{doc.hub.title}</h2>
-        <p className="lead">{doc.hub.lead}</p>
-        <div className="grid" style={{ marginTop: 24 }}>
-          {doc.hub.links.map((l, i) => (
-            <div className="card" key={i}>
-              <h3>{l.label}</h3>
-              <p>{l.note}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-      <section>
-        <div className="hub-cta">
-          <div>
-            <h3>{doc.hub.startHere.title}</h3>
-            <p>{doc.hub.startHere.text}</p>
-          </div>
-          <span className="btn btn-primary">{doc.hub.startHere.label}</span>
-        </div>
-      </section>
-      <section>
-        <h2>{doc.join.title}</h2>
-        <dl className="facts">
-          {doc.join.facts.map((f, i) => (
-            <div key={i} style={{ display: "contents" }}>
-              <dt>{f.term}</dt>
-              <dd>{f.detail}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-    </div>
   );
 }

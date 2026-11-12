@@ -145,7 +145,131 @@ dl.facts dd { margin: 0; }
 .toc { position: sticky; top: 88px; font-size: 14px; }
 .toc p { color: var(--ash); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; margin: 0 0 10px; }
 
-.guide-body h2 { font-size: 26px; margin: 0 0 12px; scroll-margin-top: 90px; }
+/* Topic title at the top of the guide body: a larger, calmer chapter heading
+   than the section titles. It keeps the same gothic family, but instead of a
+   full frame it gets one ornate ember rule underneath: a fading line with a
+   diamond set into its centre. */
+.guide-body .guide-topic-title {
+  position: relative;
+  margin: 0 0 30px;
+  padding: 0 0 20px;
+  font-size: clamp(27px, 4vw, 36px);
+  letter-spacing: 0.05em;
+  text-align: center;
+  color: #ffe2c4;
+  text-shadow: 0 0 26px rgba(255, 107, 26, 0.35);
+}
+.guide-body .guide-topic-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: min(58%, 320px);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 107, 26, 0.5) 22%,
+    rgba(255, 210, 61, 0.9) 50%,
+    rgba(255, 107, 26, 0.5) 78%,
+    transparent
+  );
+}
+.guide-body .guide-topic-title::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  transform: rotate(45deg);
+  background: var(--bg);
+  border: 1px solid rgba(255, 210, 61, 0.85);
+  box-shadow: 0 0 10px rgba(255, 107, 26, 0.55);
+}
+
+/* Sub-headings inside a section: left aligned, marked by a thin underline that
+   starts with two small angled ticks and fades out to the right. */
+.guide-body h3 {
+  position: relative;
+  text-align: left;
+  margin: 30px 0 14px;
+  padding: 0 0 10px;
+  font-size: 19px;
+  color: var(--text);
+}
+.guide-body h3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 13px;
+  height: 9px;
+  background: repeating-linear-gradient(
+    115deg,
+    rgba(255, 107, 26, 0.75) 0 1.5px,
+    transparent 1.5px 6px
+  );
+}
+.guide-body h3::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 0;
+  bottom: 1px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 107, 26, 0.5),
+    rgba(255, 107, 26, 0.16) 45%,
+    transparent 92%
+  );
+}
+
+/* Section titles only (the topic title above them keeps its own style).
+   Each title sits inside a thin gothic frame: a fine rule above and below,
+   broken at the centre by a small ember diamond. */
+.guide-body section > h2 {
+  position: relative;
+  margin: 0 0 26px;
+  padding: 20px 28px 18px;
+  font-size: clamp(21px, 2.7vw, 26px);
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: #f6d9ba;
+  text-shadow: 0 0 18px rgba(255, 107, 26, 0.28);
+  scroll-margin-top: 90px;
+  background: radial-gradient(120% 170% at 50% 0%, rgba(255, 107, 26, 0.11), transparent 65%);
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 107, 26, 0.7) 18%,
+      rgba(255, 107, 26, 0.32) 50%,
+      rgba(255, 107, 26, 0.7) 82%,
+      transparent
+    )
+    1;
+}
+.guide-body section > h2::before,
+.guide-body section > h2::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  transform: rotate(45deg);
+  background: var(--bg);
+  border: 1px solid rgba(255, 107, 26, 0.85);
+  box-shadow: 0 0 10px rgba(255, 107, 26, 0.55);
+}
+.guide-body section > h2::before { top: -5px; }
+.guide-body section > h2::after { bottom: -5px; }
+
 .guide-body section { padding: 0 0 48px; border: 0; }
 .guide-body section + section { border-top: 1px solid var(--line); padding-top: 40px; }
 .guide-body ul, .guide-body ol { color: var(--muted); padding-left: 20px; }
@@ -637,7 +761,10 @@ dialog.lb::backdrop { background: rgba(0, 0, 0, 0.85); }
   .toc-links a { padding: 12px 0 12px 12px; min-height: 44px; display: flex; align-items: center; }
 
   /* --- guide body --- */
-  .guide-body h2 { font-size: 22px; }
+  .guide-body .guide-topic-title { font-size: 24px; padding-bottom: 18px; margin-bottom: 24px; }
+  .guide-body .guide-topic-title::after { width: min(70%, 240px); }
+  .guide-body section > h2 { font-size: 19px; padding: 16px 16px 14px; margin-bottom: 20px; }
+  .guide-body h3 { font-size: 17px; margin-top: 26px; }
   .guide-body section + section { padding-top: 32px; }
   .tip { padding: 13px 15px; }
   .choice { grid-template-columns: 1fr; gap: 4px; padding: 13px 15px; }

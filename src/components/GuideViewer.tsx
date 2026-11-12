@@ -223,7 +223,7 @@ export default function GuideViewer({ doc }: { doc: GuideDoc }) {
             {g ? (
               <div key={g.id || active} id={g.id}>
                 {doc.groups.length > 1 && g.title ? (
-                  <h2 style={{ fontSize: 28, margin: "24px 0 12px" }}>{g.title}</h2>
+                  <h2 className="guide-topic-title">{g.title}</h2>
                 ) : null}
                 {g.intro ? (
                   <p

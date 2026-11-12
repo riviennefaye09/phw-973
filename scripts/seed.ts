@@ -1,9 +1,6 @@
 /* One-time setup script: push the guide document and the default home page into
    Supabase so the site has real content before the first manual edit.
 
-     npm run seed
-     npm run seed -- --force    # overwrite even if the tables already hold content
-
    Requires SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY and the schema from
    supabase/schema.sql to be in place. */
 
